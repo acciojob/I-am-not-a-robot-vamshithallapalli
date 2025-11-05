@@ -3,9 +3,9 @@ let imgClasses = ["img1", "img2", "img3", "img4", "img5"];
 
 // Pick one class randomly to duplicate
 const duplicateClass = imgClasses[Math.floor(Math.random() * imgClasses.length)];
-imgClasses.push(duplicateClass); // Now we have 6, including 1 duplicate
+imgClasses.push(duplicateClass); // Now total 6 images
 
-// Shuffle image classes
+// Shuffle
 imgClasses.sort(() => Math.random() - 0.5);
 
 // DOM references
@@ -15,12 +15,18 @@ const verifyBtn = document.getElementById("verify");
 const msg = document.getElementById("h");
 const resultMsg = document.getElementById("para");
 
-// Initial message (State 1)
+// Initial visibility (State 1)
+resetBtn.style.display = "none";
+verifyBtn.style.display = "none";
 msg.textContent = "Please click on the identical tiles to verify that you are not a robot.";
+
+// ✅ IMPORTANT FIX: Remove any images that existed in HTML
+container.innerHTML = "";
+container.classList.add("flex");
 
 let selected = [];
 
-// Create and display 6 images
+// Create clickable image tiles
 imgClasses.forEach(className => {
   let img = document.createElement("img");
   img.classList.add(className);
@@ -30,21 +36,18 @@ imgClasses.forEach(className => {
       img.classList.add("selected");
       selected.push(img);
 
-      // Show Reset Button after first click (State 2)
-      resetBtn.style.display = "inline-block";
+      resetBtn.style.display = "inline-block"; // Show reset after first click
 
-      // Show Verify Button after second click (State 3)
       if (selected.length === 2) {
-        verifyBtn.style.display = "inline-block";
+        verifyBtn.style.display = "inline-block"; // Show verify after second click
       }
     }
   });
 
-  container.classList.add("flex");
   container.appendChild(img);
 });
 
-// Reset button (State 1)
+// Reset (State 1)
 resetBtn.addEventListener("click", () => {
   selected.forEach(img => img.classList.remove("selected"));
   selected = [];
@@ -53,9 +56,9 @@ resetBtn.addEventListener("click", () => {
   resultMsg.textContent = "";
 });
 
-// Verify button (State 4)
+// Verify (State 4)
 verifyBtn.addEventListener("click", () => {
-  verifyBtn.style.display = "none"; // Remove verify button after click
+  verifyBtn.style.display = "none"; // Hide verify after checking
 
   if (selected[0].className === selected[1].className) {
     resultMsg.textContent = "You are a human. Congratulations!";
